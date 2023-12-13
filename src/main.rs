@@ -1,8 +1,15 @@
 #[macro_use] extern crate rocket;
 
+mod paste_id;
+
+// use paste_id::PasteId;
+use std::path::Path;
+use rocket::tokio::fs::File;
+
+
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index])
+    rocket::build().mount("/", routes![index, retrieve])
 }
 
 #[get("/")]
@@ -19,4 +26,11 @@ fn index() -> &'static str {
 
           retrieves the content for the paste with id `<id>`
     "
+}
+
+#[get("/<id>")]
+async fn retrieve(id: &str) -> Option<File> {
+    let upload_dir = concat!(env!("CARGO_MANIFEST_DIR"), "/", "upload");
+    let filename = Path::new(upload_dir).join(id);
+    File::open(&filename).await.ok()
 }
