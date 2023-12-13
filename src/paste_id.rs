@@ -4,6 +4,7 @@ use std::borrow::Cow;
 use std::path::{Path, PathBuf};
 
 /// A _probably_ unique paste ID.
+#[derive(UriDisplayPath)]
 pub struct PasteId<'a>(Cow<'a, str>);
 
 impl PasteId<'_> {
